@@ -1,0 +1,12 @@
+numpy
+scipy
+matplotlib
+rich
+torch
+
+pandas
+scikit-learn
+seaborn
+tqdm
+xgboost
+torchvision
