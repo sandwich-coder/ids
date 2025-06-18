@@ -3,7 +3,6 @@ from scipy import stats
 import matplotlib as mpl
 from matplotlib import pyplot as pp
 mpl.rcParams['figure.figsize'] = (10, 10)
-mpl.rcParams['axes.titlesize'] = 'xx-small'
 mpl.rcParams['axes.labelsize'] = 'xx-small'
 mpl.rcParams['xtick.labelsize'] = 'xx-small'
 mpl.rcParams['ytick.labelsize'] = 'xx-small'
