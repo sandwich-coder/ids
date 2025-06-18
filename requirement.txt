@@ -11,4 +11,6 @@ scikit-learn
 seaborn
 tqdm
 xgboost
+
 kagglehub
+pyarrow
