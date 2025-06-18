@@ -1,6 +1,5 @@
 from scipy import integrate
 from scipy import stats
-from scipy.spatial.distance import pdist, cdist
 import matplotlib as mpl
 from matplotlib import pyplot as pp
 mpl.rcParams['figure.figsize'] = (10, 10)
