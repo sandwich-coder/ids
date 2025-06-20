@@ -1,4 +1,4 @@
-# This is an all-in-one execution for quick experiments.
+# This is an all-in-one isolated execution for quick experiments.
 
 from basic import *
 
