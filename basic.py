@@ -14,5 +14,7 @@ mpl.rcParams['axes.labelsize'] = 'x-small'
 mpl.rcParams['xtick.labelsize'] = 'xx-small'
 mpl.rcParams['ytick.labelsize'] = 'xx-small'
 mpl.rcParams['legend.fontsize'] = 'x-small'
+mpl.rcParams['lines.markersize'] = 1
+mpl.rcParams['lines.linewidth'] = 0.5
 import torch
 from torch import optim, nn
