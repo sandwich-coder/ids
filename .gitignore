@@ -1,3 +1,5 @@
+# Starting with '**/' indicates the following be ignored whatever directory it is in.
+
 **/datasets
 **/figures
 **/__pycache__
