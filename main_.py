@@ -1,4 +1,4 @@
-# This is an all-in-one isolated execution for quick experiments.
+#Single isolated run
 
 from copy import deepcopy as copy
 import types
