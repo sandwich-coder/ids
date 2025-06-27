@@ -24,3 +24,7 @@ import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
+
+
+df = pd.read_csv('datasets/cic17/train-flow.csv')
+df = df[df['attack_flag'] == 0]

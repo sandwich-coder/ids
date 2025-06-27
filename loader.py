@@ -21,12 +21,20 @@ class Loader:
             kind = 'train'
         else:
             kind = 'test'
-        if normal:
-            label = 'benign'
-        else:
-            label = 'attack'
+
+        orderless = [
+            'attack_flag',
+            'attack_name',
+            'attack_step',
+            'destination_port',
+            ]
 
         df = pd.read_csv('datasets/{name}/{kind}-flow.csv'.format(
                 name = name,
                 kind = kind,
                 ))
+        if normal:
+            df = df[df['attack_flag'] == 0]
+        else:
+            df = df[df['attack_flag'] == 1]
+        df = df.drop(columns = orderless)

@@ -38,10 +38,15 @@ else:
         logger.info('Nvidia driver checked')
 
 
+#checkpoint
+loader = Loader()
+df_train = loader.load('cic17')
+sys.exit('\n\n\n---checkpoint---\n\n\n')
+
 #load
 loader = Loader()
-array_train = loader.load('cic23')
-array_test = loader.load('cic23', train = False)
+array_train = loader.load('cic17')
+array_test = loader.load('cic17', train = False)
 
 #model
 model = Autoencoder()
