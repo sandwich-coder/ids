@@ -38,11 +38,6 @@ else:
         logger.info('Nvidia driver checked')
 
 
-#checkpoint
-loader = Loader()
-df_train = loader.load('cic17')
-sys.exit('\n\n\n---checkpoint---\n\n\n')
-
 #load
 loader = Loader()
 array_train = loader.load('cic17')
@@ -69,7 +64,7 @@ np.random.seed(seed = 1)    #standardized
 
 normal = array_train.copy()
 normal = sampler.sample(normal, size = 30000)
-anomalous = loader.load('cloths')
+anomalous = loader.load('cic17', normal = False)
 anomalous = sampler.sample(anomalous, size = 30000)
 
 #gradient descent
@@ -123,11 +118,11 @@ print('            F1 (train): {f1}'.format(
 
 contaminated = np.concatenate([
     sampler.sample(
-        loader.load('digits', train = False),
+        loader.load('cic17', train = False),
         size = 27000,
         ),
     sampler.sample(
-        loader.load('cloths', train = False),
+        loader.load('cic17', train = False, normal = False),
         size = 3000,
         ),
     ], axis = 0)

@@ -9,7 +9,7 @@ class Autoencoder(nn.Module):
         super().__init__()
 
         self.encoder = nn.Sequential(
-            nn.Sequential(nn.Linear(41, 1000), nn.GELU()),
+            nn.Sequential(nn.Linear(77, 1000), nn.GELU()),
             nn.Sequential(nn.Linear(1000, 333), nn.GELU()),
             nn.Sequential(nn.Linear(333, 111), nn.GELU()),
             nn.Sequential(nn.Linear(111, 37), nn.GELU()),
@@ -21,7 +21,7 @@ class Autoencoder(nn.Module):
             nn.Sequential(nn.Linear(37, 111), nn.GELU()),
             nn.Sequential(nn.Linear(111, 333), nn.GELU()),
             nn.Sequential(nn.Linear(333, 1000), nn.GELU()),
-            nn.Sequential(nn.Linear(1000, 41), nn.Tanh()),
+            nn.Sequential(nn.Linear(1000, 77), nn.Tanh()),
             )
 
         #initialized
@@ -33,8 +33,8 @@ class Autoencoder(nn.Module):
         return 'autoencoder'
 
     def forward(self, t):
-        if t.size(dim = 1) != 41:
-            raise ValueError('The number of features must be 784.')    # Checking of the number of features should be placed in the 'forward' instead of the 'process' and 'unprocess'.
+        if t.size(dim = 1) != 77:
+            raise ValueError('The number of features must be 77.')    # Checking of the number of features should be placed in the 'forward' instead of the 'process' and 'unprocess'.
         t = torch.clone(t)
 
         """

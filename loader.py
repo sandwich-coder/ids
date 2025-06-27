@@ -26,7 +26,7 @@ class Loader:
             'attack_flag',
             'attack_name',
             'attack_step',
-            'destination_port',
+            'destination port',
             ]
 
         df = pd.read_csv('datasets/{name}/{kind}-flow.csv'.format(
@@ -38,3 +38,9 @@ class Loader:
         else:
             df = df[df['attack_flag'] == 1]
         df = df.drop(columns = orderless)
+        
+        array = df.to_numpy(dtype = 'float64', copy = True)
+        array = (array - array.min()) / (array.max() - array.min())
+        array = (array - np.float64(0.5)) * np.float64(2)
+
+        return array
