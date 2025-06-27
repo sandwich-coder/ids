@@ -16,7 +16,7 @@ else:
 learning_rate = 0.0001
 epsilon = 1e-7
 batch_size = 32
-epochs = 30
+epochs = 2
 
 
 class Trainer:

@@ -38,21 +38,22 @@ else:
         logger.info('Nvidia driver checked')
 
 
+dataset = 'cic17'
+sampler = Sampler()
+
 #load
 loader = Loader()
-array_train = loader.load('cic17')
-array_test = loader.load('cic17', train = False)
+array = loader.load(dataset)
 
 #model
 model = Autoencoder()
 
 #train
 trainer = Trainer()
-trainer.train(array_train, model)
+trainer.train(array, model)
 
 #test
-out_train = model.flow(array_train)
-out_test = model.flow(array_test)
+out = model.flow(array)
 
 
 # - plot -
@@ -62,33 +63,34 @@ plot = Plot()
 sampler = Sampler()
 np.random.seed(seed = 1)    #standardized
 
-normal = array_train.copy()
-normal = sampler.sample(normal, size = 30000)
-anomalous = loader.load('cic17', normal = False)
-anomalous = sampler.sample(anomalous, size = 30000)
-
 #gradient descent
 descent = plot.history(trainer)
 descent.savefig('figures/history.png', dpi = 300)
 
 #dashes
-dashes = plot.dashes(normal, model)
+dashes = plot.dashes(array, model)
 dashes.savefig('figures/dashes.png', dpi = 300)
+
+
+# - anomaly detection (scan) -
+
+normal = array.copy()
+anomalous = sampler.sample(
+    loader.load(dataset, normal = False),
+    size = len(normal) // 100,
+    )
 
 #reconstruction errors
 errors, error_metric = plot.errors(normal, anomalous, model, return_metric = True)
 errors.savefig('figures/errors.png', dpi = 300)
 
-
-# - anomaly detection (scan) -
-
 contaminated = np.concatenate([
-    sampler.sample(normal, size = 27000),
-    sampler.sample(anomalous, size = 3000),
+    normal,
+    anomalous,
     ], axis = 0)
 
-truth = np.zeros([30000], dtype = 'int64')
-truth[27000:] = 1
+truth = np.zeros([len(contaminated)], dtype = 'int64')
+truth[len(normal):] = 1
 truth = truth.astype('bool')
 
 # The threshold is determined manually by observing the error plot.
@@ -116,27 +118,31 @@ print('            F1 (train): {f1}'.format(
 
 # - anomaly detection (test) -
 
-contaminated = np.concatenate([
-    sampler.sample(
-        loader.load('cic17', train = False),
-        size = 27000,
-        ),
-    sampler.sample(
-        loader.load('cic17', train = False, normal = False),
-        size = 3000,
-        ),
+normal_test = loader.load(dataset, train = False)
+anomalous_test = sampler.sample(
+    loader.load(dataset, normal = False, train = False),
+    size = len(normal_test) // 100,
+    )
+
+#reconstruction errors
+errors_test = plot.errors(normal_test, anomalous_test, model)
+errors_test.savefig('figures/errors-test.png', dpi = 300)
+
+contaminated_test = np.concatenate([
+    normal_test,
+    anomalous_test,
     ], axis = 0)
 
-truth = np.zeros([30000], dtype = 'int64')
-truth[27000:] = 1
-truth = truth.astype('bool')
+truth_test = np.zeros([len(contaminated_test)], dtype = 'int64')
+truth_test[len(normal_test):] = 1
+truth_test = truth_test.astype('bool')
 
 #Euclidean distance
-error = error_metric(
-    contaminated,
-    model.flow(contaminated),
+error_test = error_metric(
+    contaminated_test,
+    model.flow(contaminated_test),
     )
-prediction = np.where(error >= threshold, True, False)
+prediction_test = np.where(error_test >= threshold, True, False)
 
 print('\n\n')
 print('      precision (test): {precision}'.format(

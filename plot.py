@@ -129,19 +129,20 @@ class Plot:
         ax = fig.add_subplot()
         ax.set_box_aspect(1)
         ax.set_title('Reconstruction Errors')
+        ax.set_xticks([])
         pp.setp(ax.get_yticklabels(), rotation = 90, ha = 'right', va = 'center')
 
         plot_1 = ax.plot(
-            range(1, len(normal_error)+1), normal_error,
-            marker = 'o', markersize = 8000 / len(normal_error),
+            np.linspace(0, 1, num = len(normal_error), dtype = 'float64'), normal_error,
+            marker = 'o', markersize = 3 / len(normal_error) ** 0.5,
             alpha = 0.8,
             linestyle = '',
             color = 'tab:blue',
             label = 'normal',
             )
         plot_2 = ax.plot(
-            range(1, len(anomalous_error)+1), anomalous_error,
-            marker = 'o', markersize = 8000 / len(anomalous_error),
+            np.linspace(0, 1, num = len(anomalous_error), dtype = 'float64'), anomalous_error,
+            marker = 'o', markersize = 3 / len(anomalous_error) ** 0.5,
             alpha = 0.8,
             linestyle = '',
             color = 'red',
