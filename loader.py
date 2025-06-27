@@ -25,4 +25,8 @@ class Loader:
             label = 'benign'
         else:
             label = 'attack'
-        # To be implemented.
+
+        df = pd.read_csv('datasets/{name}/{kind}-flow.csv'.format(
+                name = name,
+                kind = kind,
+                ))
