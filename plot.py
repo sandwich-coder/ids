@@ -78,8 +78,8 @@ class Plot:
 
             plot = ax.plot(
                 range(1, 1+len(instance)), instance,
-                marker = 'o', markersize = 600 / (compressed.shape[0] * compressed.shape[1]),
-                linestyle = '--', linewidth = 300 / (compressed.shape[0] * compressed.shape[1]),
+                marker = 'o', markersize = 3 / (compressed.shape[0] ** 0.5 * compressed.shape[1]),
+                linestyle = '--', linewidth = 3 / (compressed.shape[0] * compressed.shape[1]),
                 color = 'tab:orange',
                 alpha = 0.5,
                 )
