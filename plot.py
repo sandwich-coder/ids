@@ -61,6 +61,7 @@ class Plot:
         compressed = model.encoder(compressed)
         compressed = compressed.detach()    ###
         compressed = compressed.numpy()
+        compressed = compressed.astype('float64')
 
         fig = pp.figure(layout = 'constrained', figsize = (10, 5.4))
         ax = fig.add_subplot()
@@ -78,8 +79,8 @@ class Plot:
 
             plot = ax.plot(
                 range(1, 1+len(instance)), instance,
-                marker = 'o', markersize = 3 / (compressed.shape[0] ** 0.5 * compressed.shape[1]),
-                linestyle = '--', linewidth = 3 / (compressed.shape[0] * compressed.shape[1]),
+                marker = 'o', markersize = 45 / (compressed.shape[0] ** 0.5 * compressed.shape[1]),
+                linestyle = '--', linewidth = 30 / (compressed.shape[0] * compressed.shape[1]),
                 color = 'tab:orange',
                 alpha = 0.5,
                 )
