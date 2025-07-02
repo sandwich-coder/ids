@@ -6,22 +6,26 @@ from sklearn.preprocessing import MinMaxScaler
 
 class Autoencoder(nn.Module):
     def __init__(self, input_dim = 77):
+        if not isinstance(input_dim, int):
+            raise TypeError('The input dim should be an integer.')
+        if not input_dim > 0:
+            raise ValueError('The input dim must be positive.')
         super().__init__()
         self.input_dim = input_dim
 
         self.encoder = nn.Sequential(
             nn.Sequential(nn.Linear(self.input_dim, 100), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 33), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 33), nn.Dropout(0.3), nn.GELU()),
             nn.Sequential(nn.Linear(33, 9), nn.Tanh()),
             )
 
         self.decoder = nn.Sequential(
             nn.Sequential(nn.Linear(9, 33), nn.GELU()),
-            nn.Sequential(nn.Linear(33, 100), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.GELU()),
+            nn.Sequential(nn.Linear(33, 100), nn.Dropout(0.3), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
             nn.Sequential(nn.Linear(100, self.input_dim), nn.Tanh()),
             )
 

@@ -136,7 +136,7 @@ prediction_ = detector.predict(contaminated_)
 
 #train
 print('\n\n')
-print('     forest F1 (train): {f1}\n\n'.format(
+print('     forest F1 (train): {f1}\n'.format(
     f1 = f1_score(truth, forest_pred),
     ))
 print('     precision (train): {precision}'.format(
@@ -151,7 +151,7 @@ print('            F1 (train): {f1}'.format(
 
 #test
 print('\n\n')
-print('     forest F1 (test): {f1}\n\n'.format(
+print('     forest F1 (test): {f1}\n'.format(
     f1 = f1_score(truth_, forest_pred_),
     ))
 print('      precision (test): {precision}'.format(
