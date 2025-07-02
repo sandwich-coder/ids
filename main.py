@@ -129,7 +129,7 @@ forest_pred = forest.predict(contaminated) < 0
 forest_pred_ = forest.predict(contaminated_) < 0
 
 detector = AnomalyDetector()
-detector.build(normal, anomalous, ae, manual = True)
+detector.build(normal, anomalous, ae)
 
 prediction = detector.predict(contaminated)
 prediction_ = detector.predict(contaminated_)
