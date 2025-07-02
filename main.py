@@ -2,7 +2,7 @@ import sys, os, subprocess
 
 #python check
 if sys.version_info[:2] != (3, 10):
-    raise RuntimeError('This module is intended to be run on Python 3.12.')
+    raise RuntimeError('This module is intended to be run on Python 3.10.')
 else:
     print('Python version checked')
 
@@ -41,7 +41,7 @@ else:
 
 
 #name of the dataset
-dataset = 'cic17'
+dataset = 'nsl-kdd'
 
 #tools
 sampler = Sampler()
@@ -102,25 +102,25 @@ trainer.train(X, ae)
 plotter = Plotter()
 
 errors = plotter.errors(normal, anomalous, ae)
-dashes = plotter.dashes(normal, ae)
-boxes = plotter.boxes(normal, ae)
-violins = plotter.violins(normal, ae)
+#dashes = plotter.dashes(normal, ae)
+#boxes = plotter.boxes(normal, ae)
+#violins = plotter.violins(normal, ae)
 
 errors_ = plotter.errors(normal_, anomalous_, ae)
-dashes_ = plotter.dashes(normal_, ae)
-boxes_ = plotter.boxes(normal_, ae)
-violins_ = plotter.violins(normal_, ae)
+#dashes_ = plotter.dashes(normal_, ae)
+#boxes_ = plotter.boxes(normal_, ae)
+#violins_ = plotter.violins(normal_, ae)
 
 #saved
 os.makedirs('figures', exist_ok = True)
 errors.savefig('figures/errors-train.png', dpi = 300)
-dashes.savefig('figures/dashes-train.png', dpi = 300)
-boxes.savefig('figures/boxes-train.png', dpi = 300)
-violins.savefig('figures/violins-train.png', dpi = 300)
+#dashes.savefig('figures/dashes-train.png', dpi = 300)
+#boxes.savefig('figures/boxes-train.png', dpi = 300)
+#violins.savefig('figures/violins-train.png', dpi = 300)
 errors_.savefig('figures/errors-test.png', dpi = 300)
-dashes_.savefig('figures/dashes-test.png', dpi = 300)
-boxes_.savefig('figures/boxes-test.png', dpi = 300)
-violins_.savefig('figures/violins-test.png', dpi = 300)
+#dashes_.savefig('figures/dashes-test.png', dpi = 300)
+#boxes_.savefig('figures/boxes-test.png', dpi = 300)
+#violins_.savefig('figures/violins-test.png', dpi = 300)
 
 
 # - anomaly detection -

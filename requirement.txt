@@ -15,4 +15,5 @@ seaborn
 tqdm
 xgboost
 
-torchvision
+pyarrow
+kagglehub
