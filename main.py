@@ -40,16 +40,19 @@ else:
         logger.info('Nvidia driver checked')
 
 
+#name of the dataset
+dataset = 'cic17'
+
 #tools
 sampler = Sampler()
 
-dataset = 'cic17'
-
+# objects are for train by default, with those for test ends with an underbar.
 #load
 loader = Loader()
 X = loader.load(dataset)
 X_ = loader.load(dataset, train = False)
 
+#sampled due to the memory issue of the isolation forest
 #sampled
 X = sampler.sample(X, 300000)
 X_ = sampler.sample(X_, 300000)
@@ -125,11 +128,11 @@ violins_.savefig('figures/violins-test.png', dpi = 300)
 #traditional
 forest = IsolationForest()
 forest.fit(normal)
-forest_pred = forest.predict(contaminated) < 0
+forest_pred = forest.predict(contaminated) < 0    # '1' inlier, '-1' outlier
 forest_pred_ = forest.predict(contaminated_) < 0
 
 detector = AnomalyDetector()
-detector.build(normal, anomalous, ae)
+detector.build(normal, anomalous, ae)    # If the option 'manual=True' is given, the reconstruction error plot pops up and and the terminal takes the threshold as input manually. Not available on servers with the display forwarding not enabled.
 
 prediction = detector.predict(contaminated)
 prediction_ = detector.predict(contaminated_)

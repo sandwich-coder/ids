@@ -14,19 +14,19 @@ class Autoencoder(nn.Module):
         self.input_dim = input_dim
 
         self.encoder = nn.Sequential(
-            nn.Sequential(nn.Linear(self.input_dim, 100), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 33), nn.Dropout(0.3), nn.GELU()),
-            nn.Sequential(nn.Linear(33, 9), nn.Tanh()),
+            nn.Sequential(nn.Linear(self.input_dim, 100), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 33), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(33, 9), nn.Dropout(0.1), nn.Tanh()),
             )
 
         self.decoder = nn.Sequential(
-            nn.Sequential(nn.Linear(9, 33), nn.GELU()),
-            nn.Sequential(nn.Linear(33, 100), nn.Dropout(0.3), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.3), nn.GELU()),
-            nn.Sequential(nn.Linear(100, self.input_dim), nn.Tanh()),
+            nn.Sequential(nn.Linear(9, 33), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(33, 100), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(100, self.input_dim), nn.Dropout(0.1), nn.Tanh()),
             )
 
         #initialized
