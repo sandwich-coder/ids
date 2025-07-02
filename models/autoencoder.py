@@ -5,39 +5,60 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 class Autoencoder(nn.Module):
-    def __init__(self, input_dim = 77):
+    def __init__(self):
+        super().__init__()
+        self.input_dim = None
+        self.latent_dim = None
+        self.encoder = None
+        self.decoder = None
+        self.scaler = None
+    def __repr__(self):
+        return 'autoencoder'
+
+    def build(self, input_dim, latent_dim):
         if not isinstance(input_dim, int):
             raise TypeError('The input dim should be an integer.')
+        if not isinstance(latent_dim, int):
+            raise TypeError('The latent dimension should be an integer.')
         if not input_dim > 0:
             raise ValueError('The input dim must be positive.')
-        super().__init__()
-        self.input_dim = input_dim
+        if not latent_dim > 0:
+            raise ValueError('The latent dimension must be positive.')
+        if not latent_dim < 50:
+            raise ValueError('The layers are configured only for the latent dimension lower than 50.')
+        if not latent_dim <= input_dim:
+            raise ValueError('The latent dimension must be smaller than or same as the input.')
 
-        self.encoder = nn.Sequential(
-            nn.Sequential(nn.Linear(self.input_dim, 100), nn.Dropout(0.1), nn.GELU()),
+        encoder = nn.Sequential(
+            nn.Sequential(nn.Linear(input_dim, 100), nn.Dropout(0.1), nn.GELU()),
             nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
             nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 33), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(33, 9), nn.Dropout(0.1), nn.Tanh()),
+            nn.Sequential(nn.Linear(100, 50), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(50, latent_dim), nn.Dropout(0.1), nn.Tanh()),
             )
 
-        self.decoder = nn.Sequential(
-            nn.Sequential(nn.Linear(9, 33), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(33, 100), nn.Dropout(0.1), nn.GELU()),
+        decoder = nn.Sequential(
+            nn.Sequential(nn.Linear(latent_dim, 50), nn.Dropout(0.1), nn.GELU()),
+            nn.Sequential(nn.Linear(50, 100), nn.Dropout(0.1), nn.GELU()),
             nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
             nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, self.input_dim), nn.Dropout(0.1), nn.Tanh()),
+            nn.Sequential(nn.Linear(100, input_dim), nn.Dropout(0.1), nn.Tanh()),
             )
 
         #initialized
         with torch.no_grad():
-            nn.init.xavier_uniform_(self.encoder[-1][0].weight)
-            nn.init.xavier_uniform_(self.decoder[-1][0].weight)
+            nn.init.xavier_uniform_(encoder[-1][0].weight)
+            nn.init.xavier_uniform_(decoder[-1][0].weight)
 
-    def __repr__(self):
-        return 'autoencoder'
+        #stored
+        self.input_dim = input_dim
+        self.latent_dim = latent_dim
+        self.encoder = encoder
+        self.decoder = decoder
 
     def forward(self, t):
+        if None in (self.input_dim, self.latent_dim, self.encoder, self.decoder):
+            raise NotImplementedError('The model has not been built.')
         if not t.size(dim = 1) == self.input_dim:
             raise ValueError('The number of features must be {input_dim}.'.format(
                 input_dim = self.input_dim,
@@ -61,13 +82,14 @@ class Autoencoder(nn.Module):
         X = X.copy()
 
         if not train:
-            pass
+            if self.scaler is None:
+                raise NotImplementedError('The scaler has not been made.')
         else:
             scaler = MinMaxScaler(feature_range = (-1, 1))
             scaler.fit(X)
-            self.fit_scaler = scaler
+            self.scaler = scaler
 
-        processed = self.fit_scaler.transform(X)
+        processed = self.scaler.transform(X)
         processed = torch.tensor(processed, dtype = torch.float32)
         return processed
 
@@ -87,7 +109,7 @@ class Autoencoder(nn.Module):
 
         _ = processed.numpy()
         unprocessed = _.astype('float64')
-        unprocessed = self.fit_scaler.inverse_transform(unprocessed)
+        unprocessed = self.scaler.inverse_transform(unprocessed)
         return unprocessed
 
 

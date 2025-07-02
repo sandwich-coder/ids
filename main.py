@@ -19,6 +19,7 @@ from trainer import Trainer
 from anomaly_detector import AnomalyDetector
 from plotter import Plotter
 from tools.sampler import Sampler
+from tools.dimension_estimator import DimensionEstimator
 
 #gpu driver check
 sh = 'nvidia-smi'
@@ -45,8 +46,9 @@ dataset = 'cic17'
 
 #tools
 sampler = Sampler()
+estimator = DimensionEstimator()
 
-# objects are for train by default, with those for test ends with an underbar.
+# Objects are for train by default, with those for test ending with an underbar.
 #load
 loader = Loader()
 X = loader.load(dataset)
@@ -54,8 +56,8 @@ X_ = loader.load(dataset, train = False)
 
 #sampled due to the memory issue of the isolation forest
 #sampled
-X = sampler.sample(X, 300000)
-X_ = sampler.sample(X_, 300000)
+X = sampler.sample(X, 100000)
+X_ = sampler.sample(X_, 100000)
 
 
 # - prepared -
@@ -90,7 +92,13 @@ truth_ = truth_.astype('bool')
 
 
 #model
-ae = Autoencoder(input_dim = X.shape[1])
+ae = Autoencoder()
+temp = estimator(X, trim = True)    #dimension estimation
+logger.info('The latent dimension is set to {latent}'.format(latent = temp))
+ae.build(
+    X.shape[1],
+    temp,
+    )
 
 #trained
 trainer = Trainer(LossFn = nn.L1Loss)
@@ -154,7 +162,7 @@ print('            F1 (train): {f1}'.format(
 
 #test
 print('\n\n')
-print('     forest F1 (test): {f1}\n'.format(
+print('      forest F1 (test): {f1}\n'.format(
     f1 = f1_score(truth_, forest_pred_),
     ))
 print('      precision (test): {precision}'.format(
