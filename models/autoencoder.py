@@ -114,6 +114,7 @@ class Autoencoder(nn.Module):
         return unprocessed
 
 
+    #process->inference->unprocess
     def flow(self, X):
         if not isinstance(X, np.ndarray):
             raise TypeError('The input should be a \'numpy.ndarray\'.')
