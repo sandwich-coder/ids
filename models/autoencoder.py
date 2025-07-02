@@ -56,6 +56,7 @@ class Autoencoder(nn.Module):
         self.encoder = encoder
         self.decoder = decoder
 
+
     def forward(self, t):
         if None in (self.input_dim, self.latent_dim, self.encoder, self.decoder):
             raise NotImplementedError('The model has not been built.')
@@ -87,7 +88,7 @@ class Autoencoder(nn.Module):
         else:
             scaler = MinMaxScaler(feature_range = (-1, 1))
             scaler.fit(X)
-            self.scaler = scaler
+            self.scaler = scaler    #stored
 
         processed = self.scaler.transform(X)
         processed = torch.tensor(processed, dtype = torch.float32)
