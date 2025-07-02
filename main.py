@@ -42,7 +42,7 @@ else:
 
 
 #name of the dataset
-dataset = 'cic17'
+dataset = 'nsl-kdd'
 
 #tools
 sampler = Sampler()
@@ -55,6 +55,7 @@ X = loader.load(dataset)
 X_ = loader.load(dataset, train = False)
 
 #sampled due to the memory issue of the isolation forest
+# Also, the dimension estimator uses the isolation forest inside.
 #sampled
 X = sampler.sample(X, 100000)
 X_ = sampler.sample(X_, 100000)
