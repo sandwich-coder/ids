@@ -30,62 +30,6 @@ class Plotter:
     def __repr__(self):
         return 'plot'
 
-    def before_after(self, X, ae, index = None):
-        if not isinstance(X, np.ndarray):
-            raise TypeError('The array should be a \'numpy.ndarray\'.')
-        if X.dtype != np.float64:
-            X = X.astype('float64')
-        if X.ndim != 2:
-            raise ValueError('The array must be tabular')
-        if not isinstance(ae, nn.Module):
-            raise TypeError('The autoencoder should be a \'torch.nn.Module\'.')
-        if index is not None:
-            if not isinstance(index, np.ndarray):
-                raise TypeError('The indices should be a \'numpy.ndarray\'.')
-            if index.dtype != np.int64:
-                raise ValueError('The indices must be of \'numpy.int64\'.')
-            if index.ndim != 1:
-                raise ValueError('The indices must be 1-dimensional.')
-            index = index.copy()
-        else:
-            index = np.random.choice(len(X), size = 30, replace = False)
-        X = X.copy()
-
-        before = X.copy()
-        after = ae.flow(X)
-
-        figs = []
-        for lll in index:
-            fig = pp.figure(layout = 'constrained', figsize = (10, 5))
-            gs = fig.add_gridspec(nrows = 1, ncols = 2)
-
-            ax_1 = fig.add_subplot(gs[1-1])
-            ax_1.set_box_aspect(1)
-            ax_1.set_aspect(1)
-            ax_1.set_xticks([])
-            ax_1.set_yticks([])
-            plot_1 = ax_1.imshow(
-                before[lll].reshape([28, 28]),
-                cmap = 'grey',
-                vmin = -1, vmax = 1,
-                )
-
-            ax_2 = fig.add_subplot(gs[2-1])
-            ax_2.set_box_aspect(1)
-            ax_2.set_aspect(1)
-            ax_2.set_xticks([])
-            ax_2.set_yticks([])
-            plot_2 = ax_2.imshow(
-                after[lll].reshape([28, 28]),
-                cmap = 'grey',
-                vmin = -1, vmax = 1,
-                )
-
-            figs.append(fig)
-
-        return figs
-
-
     def errors(self, normal, anomalous, ae):
         if not isinstance(normal, np.ndarray):
             raise TypeError('The normal should be a \'numpy.ndarray\'.')
