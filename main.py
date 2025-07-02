@@ -41,7 +41,7 @@ else:
 
 
 #name of the dataset
-dataset = 'nsl-kdd'
+dataset = 'cic17'
 
 #tools
 sampler = Sampler()
