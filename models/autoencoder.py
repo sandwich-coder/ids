@@ -24,25 +24,21 @@ class Autoencoder(nn.Module):
             raise ValueError('The input dim must be positive.')
         if not latent_dim > 0:
             raise ValueError('The latent dimension must be positive.')
-        if not latent_dim < 50:
+        if not latent_dim < 30:
             raise ValueError('The layers are configured only for the latent dimension lower than 50.')
         if not latent_dim <= input_dim:
             raise ValueError('The latent dimension must be smaller than or same as the input.')
 
         encoder = nn.Sequential(
-            nn.Sequential(nn.Linear(input_dim, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 50), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(50, latent_dim), nn.Dropout(0.1), nn.Tanh()),
+            nn.Sequential(nn.Linear(input_dim, 100), nn.GELU()),
+            nn.Sequential(nn.Linear(100, 30), nn.GELU()),
+            nn.Sequential(nn.Linear(30, latent_dim), nn.Tanh()),
             )
 
         decoder = nn.Sequential(
-            nn.Sequential(nn.Linear(latent_dim, 50), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(50, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, 100), nn.Dropout(0.1), nn.GELU()),
-            nn.Sequential(nn.Linear(100, input_dim), nn.Dropout(0.1), nn.Tanh()),
+            nn.Sequential(nn.Linear(latent_dim, 30), nn.GELU()),
+            nn.Sequential(nn.Linear(30, 100), nn.GELU()),
+            nn.Sequential(nn.Linear(100, input_dim), nn.Tanh()),
             )
 
         #initialized

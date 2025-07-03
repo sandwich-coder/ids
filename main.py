@@ -42,7 +42,7 @@ else:
 
 
 #name of the dataset
-dataset = 'nsl-kdd'
+dataset = 'cic17'
 
 #tools
 sampler = Sampler()
@@ -57,8 +57,8 @@ X_ = loader.load(dataset, train = False)
 #sampled due to the memory issue of the isolation forest
 # Also, the dimension estimator uses the isolation forest inside.
 #sampled
-X = sampler.sample(X, 100000)
-X_ = sampler.sample(X_, 100000)
+X = sampler.sample(X, 300000)
+X_ = sampler.sample(X_, 300000)
 
 
 # - prepared -
@@ -92,6 +92,8 @@ truth_[len(normal_):] = 1
 truth_ = truth_.astype('bool')
 
 
+# - training -
+
 #model
 ae = Autoencoder()
 temp = estimator(X, trim = True)    #dimension estimation
@@ -102,8 +104,11 @@ ae.build(
     )
 
 #trained
-trainer = Trainer(LossFn = nn.L1Loss)
+train_lapse = time.time()
+trainer = Trainer()
 trainer.train(X, ae)
+train_lapse = time.time() - train_lapse
+logging.info('Training Time: {lapse}'.format(lapse = train_lapse))
 
 
 # - plots -
@@ -143,35 +148,53 @@ forest_pred_ = forest.predict(contaminated_) < 0
 detector = AnomalyDetector()
 detector.build(normal, anomalous, ae)    # If the option 'manual=True' is given, the reconstruction error plot pops up and and the terminal takes the threshold as input manually. Not available on servers with the display forwarding not enabled.
 
+prediction_lapse = time.time()
 prediction = detector.predict(contaminated)
+prediction_lapse = time.time() - prediction_lapse
+
+prediction_lapse_ = time.time()
 prediction_ = detector.predict(contaminated_)
+prediction_lapse_ = time.time() - prediction_lapse_
+
+print('\n\n\n')
+print('Dataset: {name}'.format(name = dataset))
+print('Training Time: {lapse} (s)'.format(
+    lapse = round(train_lapse, 1),
+    ))
+print('')
 
 #train
-print('\n\n')
+print('\n')
 print('     forest F1 (train): {f1}\n'.format(
-    f1 = f1_score(truth, forest_pred),
+    f1 = round(f1_score(truth, forest_pred), 3),
+    ))
+print('   computation (train): {lapse} (s)'.format(
+    lapse = round(prediction_lapse, 4),
     ))
 print('     precision (train): {precision}'.format(
-    precision = precision_score(truth, prediction),
+    precision = round(precision_score(truth, prediction), 3),
     ))
 print('        recall (train): {recall}'.format(
-    recall = recall_score(truth, prediction),
+    recall = round(recall_score(truth, prediction), 3),
     ))
 print('            F1 (train): {f1}'.format(
-    f1 = f1_score(truth, prediction),
+    f1 = round(f1_score(truth, prediction), 3),
     ))
 
 #test
-print('\n\n')
+print('\n')
 print('      forest F1 (test): {f1}\n'.format(
-    f1 = f1_score(truth_, forest_pred_),
+    f1 = round(f1_score(truth_, forest_pred_), 3),
+    ))
+print('    computation (test): {lapse} (s)'.format(
+    lapse = round(prediction_lapse_, 4),
     ))
 print('      precision (test): {precision}'.format(
-    precision = precision_score(truth_, prediction_),
+    precision = round(precision_score(truth_, prediction_), 3),
     ))
 print('         recall (test): {recall}'.format(
-    recall = recall_score(truth_, prediction_),
+    recall = round(recall_score(truth_, prediction_), 3),
     ))
 print('             F1 (test): {f1}'.format(
-    f1 = f1_score(truth_, prediction_),
+    f1 = round(f1_score(truth_, prediction_), 3),
     ))

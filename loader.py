@@ -68,5 +68,27 @@ class Loader:
             array = df.to_numpy(dtype = 'float64', copy = True)
             array = (array - array.min()) / (array.max() - array.min())
             array = (array - np.float64(0.5)) * np.float64(2)
+        elif name == 'ton-iot':
+            orderless = [
+                'l4_src_port',
+                'l4_dst_port',
+                'protocol',
+                'l7_proto',
+                'attack_flag',
+                'attack_name',
+                'attack_step',
+                ]
+            df = pd.read_csv('datasets/{name}/{kind}-flow.csv'.format(
+                name = name,
+                kind = kind,
+                ))
+            if not normal:
+                df = df[df['attack_flag'] == 1]
+            else:
+                df = df[df['attack_flag'] == 0]
+            df = df.drop(columns = orderless)
+            array = df.to_numpy(dtype = 'float64', copy = True)
+            array = (array - array.min()) / (array.max() - array.min())
+            array = (array - np.float64(0.5)) * np.float64(2)
 
         return array
